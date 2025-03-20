@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+   version="6.0">
+    <display-name>Balance Query Service</display-name>
+    <servlet>
+        <servlet-name>BalanceServlet</servlet-name>
+        <servlet-class>com.mycompany.balancequeryservice.BalanceServlet</servlet-class>
+    </servlet>
+
+ <servlet-mapping>
+        <servlet-name>BalanceServlet</servlet-name>
+        <url-pattern>/checkBalance</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>
