@@ -8,11 +8,46 @@
         <servlet-name>BalanceServlet</servlet-name>
         <servlet-class>com.mycompany.balancequeryservice.BalanceServlet</servlet-class>
     </servlet>
-
- <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>BalanceServlet</servlet-name>
         <url-pattern>/checkBalance</url-pattern>
     </servlet-mapping>
+<servlet>
+        <servlet-name>ViewAllUsers</servlet-name>
+        <servlet-class>com.mycompany.balancequeryservice.ViewAllUsersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewAllUsers</servlet-name>
+        <url-pattern>/viewUsers</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddUser</servlet-name>
+        <servlet-class>com.mycompany.balancequeryservice.AddUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddUser</servlet-name>
+        <url-pattern>/addUser</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateBalance</servlet-name>
+        <servlet-class>com.mycompany.balancequeryservice.UpdateBalanceServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateBalance</servlet-name>
+        <url-pattern>/updateBalance</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteUser</servlet-name>
+        <servlet-class>com.mycompany.balancequeryservice.DeleteUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteUser</servlet-name>
+        <url-pattern>/deleteUser</url-pattern>
+    </servlet-mapping>
+ 
 
     <session-config>
         <session-timeout>
