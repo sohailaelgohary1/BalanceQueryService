@@ -4,22 +4,44 @@
  */
 package com.mycompany.balancequeryservice;
 
-
+import java.math.BigDecimal;
 
 public class User {
+    private int id;
     private String msisdn;
-    private double balance;
+    private BigDecimal balance;
 
-    public User() {}
-
-    public User(String msisdn, double balance) {
-        this.msisdn = msisdn;
-        this.balance = balance;
+    public User() {
+        // Default constructor
     }
 
-    public String getMsisdn() { return msisdn; }
-    public void setMsisdn(String msisdn) { this.msisdn = msisdn; }
+    public User(int id, String msisdn, BigDecimal balance) {
+        this.id = id;
+        this.msisdn = msisdn;
+        this.balance = balance != null ? balance : BigDecimal.ZERO;
+    }
 
-    public double getBalance() { return balance; }
-    public void setBalance(double balance) { this.balance = balance; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
+
+    public BigDecimal getBalance() {
+        return balance != null ? balance : BigDecimal.ZERO;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
 }
