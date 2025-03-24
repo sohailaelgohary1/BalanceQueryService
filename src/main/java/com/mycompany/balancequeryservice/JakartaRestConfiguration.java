@@ -7,7 +7,6 @@ package com.mycompany.balancequeryservice;
  * @author Juneau
  */
 
-
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
