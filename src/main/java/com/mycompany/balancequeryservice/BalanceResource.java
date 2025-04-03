@@ -146,4 +146,36 @@ public class BalanceResource {
                            .build();
         }
     }
+    @GET
+@Path("{id}")
+public Response getUserBalance(@PathParam("id") int id) {
+    String sql = "SELECT * FROM users WHERE id = ?";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            User user = new User(
+                rs.getInt("id"),
+                rs.getString("msisdn"),
+                rs.getBigDecimal("balance")
+            );
+            return Response.ok(user, MediaType.APPLICATION_JSON).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("{\"error\": \"User not found\"}")
+                           .type(MediaType.APPLICATION_JSON)
+                           .build();
+        }
+    } catch (SQLException e) {
+        LOGGER.log(Level.SEVERE, "Database error while fetching user", e);
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                       .entity("{\"error\": \"Database error occurred\"}")
+                       .type(MediaType.APPLICATION_JSON)
+                       .build();
+    }
+}
+
 }

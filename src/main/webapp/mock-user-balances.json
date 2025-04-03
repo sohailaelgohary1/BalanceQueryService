@@ -1,0 +1,64 @@
+{
+  "userBalances": [
+    {
+      "id": 1,
+      "name": "John Smith",
+      "balance": 2500.75,
+      "lastUpdated": "2025-03-15T09:23:45.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Sarah Johnson",
+      "balance": 1850.50,
+      "lastUpdated": "2025-03-18T14:12:30.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Michael Brown",
+      "balance": 4200.00,
+      "lastUpdated": "2025-03-19T11:45:12.000Z"
+    },
+    {
+      "id": 4,
+      "name": "Emily Wilson",
+      "balance": 750.25,
+      "lastUpdated": "2025-03-14T16:30:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "David Lee",
+      "balance": 3100.80,
+      "lastUpdated": "2025-03-17T10:05:22.000Z"
+    },
+    {
+      "id": 6,
+      "name": "Jessica Martinez",
+      "balance": 1200.45,
+      "lastUpdated": "2025-03-16T08:45:18.000Z"
+    },
+    {
+      "id": 7,
+      "name": "Robert Taylor",
+      "balance": 5500.00,
+      "lastUpdated": "2025-03-10T13:20:40.000Z"
+    },
+    {
+      "id": 8,
+      "name": "Amanda Garcia",
+      "balance": 925.30,
+      "lastUpdated": "2025-03-12T15:55:10.000Z"
+    },
+    {
+      "id": 9,
+      "name": "James Wilson",
+      "balance": 3750.60,
+      "lastUpdated": "2025-03-19T09:10:25.000Z"
+    },
+    {
+      "id": 10,
+      "name": "Jennifer Anderson",
+      "balance": 2100.90,
+      "lastUpdated": "2025-03-20T08:30:15.000Z"
+    }
+  ]
+}

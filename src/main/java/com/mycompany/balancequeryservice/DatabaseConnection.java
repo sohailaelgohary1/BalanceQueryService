@@ -16,8 +16,8 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     private static final String URL = "jdbc:postgresql://localhost:5432/balance_query_db";
-    private static final String USER = "myuser";
-    private static final String PASSWORD = "1234";
+    private static final String USER = "postgres";
+    private static final String PASSWORD = "123";
  
     static {
         try {
