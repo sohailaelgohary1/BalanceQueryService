@@ -1,0 +1,50 @@
+public class AGI_1 extends BaseAgiScript {
+    
+    @Override
+    public void service(AgiRequest request, AgiChannel channel) 
+            throws AgiException {
+        try {
+            // 1. Answer the call
+            answer();
+            
+            // 2. Play welcome message
+            exec("Festival", "Welcome to balance inquiry service");
+            
+            // 3. Collect DTMF input (10 digits)
+            exec("Festival", "Please enter your 10 digit phone number followed by pound");
+            String msisdn = getData("silence/1", 10000, 15); // 5s timeout, max 10 digits
+            System.out.println(msisdn);
+            // 4. Validate input
+            if (msisdn == null /*|| !msisdn.matches("\\d{15}")*/) {
+                exec("Festival", "Invalid number format");
+                hangup();
+                return;
+            }
+            
+            // 5. Query balance (replace with your actual lookup logic)
+            double balance = lookupBalance(msisdn);
+            
+            // 6. Announce balance
+            exec("Festival", "Your current balance is"+ Double.toString(balance)); 
+            // 7. Goodbye
+            exec("Festival", "Thank you for using our service");
+            
+        } catch (Exception e) {
+            verbose("AGI Error: " + e.getMessage(), 1);
+            exec("Festival", "System error occurred");
+        } finally {
+            hangup();
+        }
+    }
+    
+    // Replace this with your actual balance lookup logic
+    private double lookupBalance(String msisdn) {
+        // Example implementation:
+        if ("20123456789".equals(msisdn)) {
+            return 150.50;
+        } else if ("20198765432".equals(msisdn)) {
+            return 75.25;
+        }
+        return 0.0; // Default for unknown numbers
+    }
+}

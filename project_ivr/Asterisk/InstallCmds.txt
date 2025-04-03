@@ -1,0 +1,30 @@
+yum update
+yum install wget build-essential subversion
+#Disable SELinux
+#In order to make Asterisk work, you'll have to open /etc/selinux/config file and set SELINUX=disabled
+
+cd /usr/src/
+sudo wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz
+sudo tar zxf asterisk-18-current.tar.gz
+cd asterisk-18.*/
+sudo contrib/scripts/get_mp3_source.sh
+sudo contrib/scripts/install_prereq install
+sudo ./configure --libdir=/usr/lib64 --with-jansson-bundled
+
+
+
+sudo make menuselect  # select format_mp3
+sudo make -j2
+sudo make install
+sudo make samples
+sudo make config
+sudo ldconfig
+
+sudo systemctl start asterisk
+sudo asterisk -vvvr
+
+sudo firewall-cmd --zone=public --add-port=5060/udp --permanent
+sudo firewall-cmd --reload
+
+
+

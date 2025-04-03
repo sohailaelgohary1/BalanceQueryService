@@ -1,0 +1,17 @@
+Extensions_conf
+[internal]
+exten => 1002,1,Answer()
+exten => 1002,2,set(AGI_DEBUG=YES)
+;same => n,Agi(agi://192.168.1.7/helloo.agi)
+same => n,Agi(test1.py)
+exten => 1003,1,Answer()
+exten => 1003,2,set(AGI_DEBUG=YES)
+same => n,Agi(agi://192.168.1.7/helloo.agi)
+ 
+;exten => 1003,1,Answer()
+;exten => 1003,2,Festival("test test")
+;exten => 1003,3,Hangup()
+[default]
+exten => 1000,1,Answer()
+same => n,Playback(hello-world)
+same => n,Hangup()
