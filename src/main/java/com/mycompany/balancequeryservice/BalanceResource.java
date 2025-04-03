@@ -57,15 +57,18 @@ public class BalanceResource {
 
         String sql = "INSERT INTO users (msisdn, balance) VALUES (?, ?) RETURNING id";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.getGeneratedKeys()) {  // Auto-close result set
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, user.getMsisdn());
             stmt.setBigDecimal(2, user.getBalance() != null ? user.getBalance() : BigDecimal.ZERO);
 
             int affectedRows = stmt.executeUpdate();
-            if (affectedRows > 0 && rs.next()) {
-                user.setId(rs.getInt("id"));
+            if (affectedRows > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        user.setId(rs.getInt(1)); // Get generated ID
+                    }
+                }
                 return Response.status(Response.Status.CREATED).entity(user).build();
             } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
