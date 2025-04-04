@@ -64,7 +64,7 @@ public class AGI_1 extends BaseAgiScript {
         HttpURLConnection conn = null;
         try {
            
-            URL url = new URL("https://67ed776d4387d9117bbdba28.mockapi.io/api/v1/balance");
+            URL url = new URL("http://localhost:8080/balancequery/api/balance/"+msisdn);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setConnectTimeout(TIMEOUT_MS);
