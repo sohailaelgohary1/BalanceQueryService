@@ -20,7 +20,7 @@ public class AGI_1 extends BaseAgiScript {
   
     private static final String API_BASE_URL = "http://your-api-server:8080";
     private static final String BALANCE_ENDPOINT = "https://67ed776d4387d9117bbdba28.mockapi.io/api/v1/balance";
-    private static final int TIMEOUT_MS = 3000; // 3 second timeout
+    private static final int TIMEOUT_MS = 3000; 
     
     @Override
     public void service(AgiRequest request, AgiChannel channel) 
