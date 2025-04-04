@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Balance Management</title>
+    <style>
+        /* Basic Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .btn-add {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-submit {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .btn-update, .btn-delete {
+            background-color: #FF6347;
+            color: white;
+        }
+
+        .btn-cancel {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .loading {
+            text-align: center;
+            display: none;
+            font-size: 16px;
+        }
+
+        .error-message {
+            color: red;
+            display: none;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f1f1f1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>User Balance Management</h1>
+    <button id="addNewBtn" class="btn btn-add">Add New User Balance</button>
+
+    <div class="loading" id="loadingIndicator">Loading user data...</div>
+    <div class="error-message" id="errorMessage"></div>
+
+    <table id="userBalanceTable">
+        <thead>
+        <tr>
+            <th>User ID</th>
+            <th>MSISDN</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="userBalanceTableBody">
+        <!-- Data will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Add/Update Modal -->
+<div id="userBalanceModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2 id="modalTitle">Add New User Balance</h2>
+        <form id="userBalanceForm">
+            <input type="hidden" id="userId" name="userId">
+
+            <div class="form-group">
+                <label for="userName">MSISDN (User Phone Number)</label>
+                <input type="text" id="userName" name="userName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="userBalance">Balance</label>
+                <input type="number" id="userBalance" name="userBalance" step="0.01" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Submit</button>
+            <button type="button" class="btn-cancel" id="cancelModal">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteConfirmModal" class="modal">
+    <div class="modal-content">
+        <h2>Confirm Deletion</h2>
+        <p>Are you sure you want to delete this user balance record?</p>
+        <input type="hidden" id="deleteUserId">
+        <button class="btn-delete" id="confirmDelete">Delete</button>
+        <button class="btn-cancel" id="cancelDelete">Cancel</button>
+    </div>
+</div>
+
+<script>
+    // DOM Elements
+    const userBalanceTable = document.getElementById('userBalanceTableBody');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const errorMessage = document.getElementById('errorMessage');
+    const modal = document.getElementById('userBalanceModal');
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    const addNewBtn = document.getElementById('addNewBtn');
+    const closeModal = document.getElementById('closeModal');
+    const cancelModal = document.getElementById('cancelModal');
+    const userBalanceForm = document.getElementById('userBalanceForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const deleteUserId = document.getElementById('deleteUserId');
+    const confirmDelete = document.getElementById('confirmDelete');
+    const cancelDelete = document.getElementById('cancelDelete');
+
+    const API_URL = 'http://localhost:8080/BalanceQueryService/api/balance'; // The REST API base URL
+
+    // Load all user balances when the page loads
+    document.addEventListener('DOMContentLoaded', loadUserBalances);
+
+    // Event Listeners
+    addNewBtn.addEventListener('click', openAddModal);
+    closeModal.addEventListener('click', closeUserModal);
+    cancelModal.addEventListener('click', closeUserModal);
+    userBalanceForm.addEventListener('submit', handleFormSubmit);
+    confirmDelete.addEventListener('click', deleteUserBalance);
+    cancelDelete.addEventListener('click', closeDeleteModal);
+
+    // Close modals when clicking outside
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeUserModal();
+        }
+        if (event.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
+
+    // Functions to handle user balance data
+    async function loadUserBalances() {
+        showLoading(true);
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error('Failed to fetch user balances data');
+            }
+
+            const data = await response.json();
+            renderUserBalances(data);
+            showLoading(false);
+        } catch (error) {
+            showError('Error loading data: ' + error.message);
+            showLoading(false);
+        }
+    }
+
+    function renderUserBalances(userBalances) {
+        userBalanceTable.innerHTML = '';
+
+        if (userBalances.length === 0) {
+            userBalanceTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">No user balances found</td></tr>';
+            return;
+        }
+
+        userBalances.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.msisdn}</td>
+                <td>$${parseFloat(user.balance).toFixed(2)}</td>
+                <td>
+                    <button class="btn btn-update" data-id="${user.id}">Update</button>
+                    <button class="btn btn-delete" data-id="${user.id}">Delete</button>
+                </td>
+            `;
+            userBalanceTable.appendChild(row);
+        });
+
+        // Add event listeners to the buttons
+        document.querySelectorAll('.btn-update').forEach(button => {
+            button.addEventListener('click', () => openUpdateModal(button.getAttribute('data-id')));
+        });
+
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', () => openDeleteModal(button.getAttribute('data-id')));
+        });
+    }
+
+    // Modal functions
+    function openAddModal() {
+        modalTitle.textContent = 'Add New User Balance';
+        document.getElementById('userId').value = '';
+        document.getElementById('userName').value = '';
+        document.getElementById('userBalance').value = '';
+        modal.style.display = 'block';
+    }
+
+    function openUpdateModal(id) {
+        modalTitle.textContent = 'Update User Balance';
+        fetch(`${API_URL}/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                return response.json();
+            })
+            .then(user => {
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userName').value = user.msisdn;
+                document.getElementById('userBalance').value = user.balance;
+                modal.style.display = 'block';
+            })
+            .catch(error => {
+                showError('Error fetching user data: ' + error.message);
+            });
+    }
+
+    function openDeleteModal(id) {
+        deleteUserId.value = id;
+        deleteModal.style.display = 'block';
+    }
+
+    function closeUserModal() {
+        modal.style.display = 'none';
+    }
+
+    function closeDeleteModal() {
+        deleteModal.style.display = 'none';
+    }
+
+    // Form submit (Add/Update user balance)
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+
+        const userId = document.getElementById('userId').value;
+        const userData = {
+            msisdn: document.getElementById('userName').value,
+            balance: parseFloat(document.getElementById('userBalance').value)
+        };
+
+        try {
+            showLoading(true);
+
+            if (userId) {
+                // Update existing user
+                const response = await fetch(`${API_URL}/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update user');
+                }
+
+                closeUserModal();
+                loadUserBalances(); // Reload balances after success
+                showLoading(false);
+            } else {
+                // Add new user
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create user');
+                }
+
+                closeUserModal();
+                loadUserBalances(); // Reload balances after success
+                showLoading(false);
+            }
+        } catch (error) {
+            showError(error.message);
+            showLoading(false);
+        }
+    }
+
+    // Delete user balance
+    async function deleteUserBalance() {
+        const userId = deleteUserId.value;
+        try {
+            const response = await fetch(`${API_URL}/${userId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete user');
+            }
+
+            closeDeleteModal();
+            loadUserBalances(); // Reload balances after success
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    // Loading and error handling
+    function showLoading(isLoading) {
+        if (isLoading) {
+            loadingIndicator.style.display = 'block';
+        } else {
+            loadingIndicator.style.display = 'none';
+        }
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
+
