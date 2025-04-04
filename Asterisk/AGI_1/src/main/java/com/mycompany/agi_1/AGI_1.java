@@ -97,12 +97,9 @@ public class AGI_1 extends BaseAgiScript {
     private double extractBalanceFromJson(String jsonResponse) {
     try {
       
-        String cleanJson = jsonResponse.replaceAll("[\\[\\]\\s]", "");
-        
-     
-        String[] pairs = cleanJson.split(",");
-        
-        
+        String cleanJson = jsonResponse.replaceAll("[\\[\\]\\s]", "");          
+        String[] pairs = cleanJson.split(",");   
+      
         for (String pair : pairs) {
             if (pair.contains("\"balance\":")) {
                 
