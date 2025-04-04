@@ -47,7 +47,10 @@ public class AGI_1 extends BaseAgiScript {
             double balance = fetchBalanceFromAPI(msisdn);
             
            
-            exec("Festival", "Your current balance is"+ Double.toString(balance)); 
+            //exec("Festival", "Your current balance is"+ Double.toString(balance));
+          
+            exec("Festival", "Your current balance is"+ doubleToPounds(balance));
+            
       
             exec("Festival", "Thank you for using our service");
             
@@ -116,4 +119,100 @@ public class AGI_1 extends BaseAgiScript {
     }
     return -1;
 }
+  public static String doubleToPounds(double num) {
+        final String[] units = {
+            "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+            "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+        };
+        
+        final String[] tens = {
+            "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
+        };
+        
+        final String[] scales = {
+            "", "thousand", "million", "billion"
+        };
+        
+        if (Math.abs(num) >= 1000000000000.0) {
+            return "Too Much";
+        }
+        
+        boolean isNegative = num < 0;
+        if (isNegative) {
+            num = -num;
+        }
+        
+   
+        long intPart = (long) num;
+        double fractionalPart = num - intPart;
+        int decimalPart = (int) Math.round(fractionalPart * 100);
+        
+        String result = "";
+        
+       
+        if (intPart == 0 && decimalPart > 0) {
+            if (decimalPart == 25) {
+                return "quarter pound";
+            } else if (decimalPart == 50 || decimalPart == 5) {
+                return "half pound";
+            } else {
+                return decimalPart + " cents";
+            }
+        }
+        
+   
+        if (intPart == 0) {
+            result = "zero";
+        } else {
+            result = convertIntToWords(intPart, units, tens, scales);
+        }
+        result += " pound" + (intPart != 1 ? "s" : "");
+        
+       
+        if (isNegative) {
+            result = "negative " + result;
+        }
+        
+     
+        if (fractionalPart > 0) {
+            if (decimalPart == 25) {
+                result += " and quarter";
+            } else if (decimalPart == 50 || decimalPart == 5) {
+                result += " and half";
+            } else if (decimalPart > 0) {
+                result += " and " + decimalPart + " cent" + (decimalPart != 1 ? "s" : "");
+            }
+        }
+        
+        return result;
+    }
+    
+  
+    private static String convertIntToWords(long num, String[] units, String[] tens, String[] scales) {
+        if (num == 0) {
+            return "";
+        }
+        
+        if (num < 20) {
+            return units[(int) num];
+        }
+        
+        if (num < 100) {
+            return tens[(int) (num / 10)] + (num % 10 != 0 ? " " + units[(int) (num % 10)] : "");
+        }
+        
+        if (num < 1000) {
+            return units[(int) (num / 100)] + " hundred" + (num % 100 != 0 ? " " + convertIntToWords(num % 100, units, tens, scales) : "");
+        }
+        
+        for (int i = 3; i >= 1; i--) {
+            if (num >= Math.pow(1000, i)) {
+                return convertIntToWords(num / (long) Math.pow(1000, i), units, tens, scales) + " " + scales[i] + 
+                       (num % (long) Math.pow(1000, i) != 0 ? " " + convertIntToWords(num % (long) Math.pow(1000, i), units, tens, scales) : "");
+            }
+        }
+        
+        return "";
+    }
+    
 }
