@@ -10,17 +10,16 @@ public class CDR {
     private String calledNumber;
     private Date startTime;
     private Date endTime;
-    private int duration; // in seconds
-    private String callType; // VOICE, SMS, DATA
+    private int duration; 
+    private String callType; 
     private double charge;
-    private String status; // SUCCESS, FAILED, BUSY
+    private String status; 
     private String imsi;
     private String imei;
     private String mcc;
     private String mnc;
     private String cellId;
 
-    // Constructors
     public CDR() {}
 
     public CDR(String callId, String callingNumber, String calledNumber, 
@@ -37,8 +36,6 @@ public class CDR {
         this.status = status;
     }
 
-    // Getters and Setters
     public ObjectId getId() { return id; }
     public void setId(ObjectId id) { this.id = id; }
-    // ... (add all other getters and setters)
 }
