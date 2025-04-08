@@ -3,6 +3,12 @@ import com.iti.database.DB_Handler;
 import com.iti.database.psql.PSQL_Handler;
 import java.sql.Timestamp;
 import java.time.Instant;
+
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import java.util.UUID;
 
 public class CDRGenerator {
