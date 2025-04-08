@@ -24,7 +24,12 @@
             <version>${jakartaee.version}</version>
             <scope>provided</scope>
         </dependency>
+ 
+		
+    <!-- MongoDB Java Driver -->
+
              <!-- MongoDB Java Driver -->
+ 
     <dependency>
         <groupId>org.mongodb</groupId>
         <artifactId>mongodb-driver-sync</artifactId>
@@ -37,6 +42,7 @@
         <artifactId>java-uuid-generator</artifactId>
         <version>4.1.1</version>
     </dependency>
+
 
         <!-- Jersey (JAX-RS) -->
         <dependency>
