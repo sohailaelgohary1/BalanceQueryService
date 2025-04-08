@@ -27,7 +27,7 @@ public class CDRGeneratorService {
         CDR cdr = new CDR(callId, callingNumber, calledNumber, 
                          startTime, endTime, callType, charge, status);
         
-        // Set additional fields
+        
         cdr.setImsi("IMSI" + random.nextInt(10000));
         cdr.setImei("IMEI" + random.nextInt(10000));
         cdr.setMcc(String.valueOf(200 + random.nextInt(100)));
