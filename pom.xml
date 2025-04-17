@@ -104,6 +104,13 @@
             <artifactId>postgresql</artifactId>
             <version>42.6.0</version>
         </dependency>
+        
+        <dependency>
+    <groupId>org.mongodb</groupId>
+    <artifactId>mongo-java-driver</artifactId>
+    <version>3.12.14</version> <!-- or latest 3.x supported in your NetBeans -->
+</dependency>
+
 
     </dependencies>
 
