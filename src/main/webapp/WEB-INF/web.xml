@@ -1,7 +1,24 @@
 <web-app xmlns="http://jakarta.ee/xml/ns/jakartaee"
          version="4.0">
     <display-name>BalanceQueryService</display-name>
-  
+  <servlet>
+    <servlet-name>LogCall</servlet-name>
+    <servlet-class>com.mycompany.backendMongodb.LogCall</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>LogCall</servlet-name>
+    <url-pattern>/log-call</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>CallLogView</servlet-name>
+    <servlet-class>com.mycompany.backendMongodb.CallLogView</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>CallLogView</servlet-name>
+    <url-pattern>/view-logs</url-pattern>
+</servlet-mapping>
+
     <session-config>
         <session-timeout>
             30
