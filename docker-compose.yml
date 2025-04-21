@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  pg_balance:
+    image: postgres
+    container_name: pg_balance
+    environment:
+      POSTGRES_USER: javauser
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: balance_query_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5430:5432"
+
+  backend:
+    image: tomcat:10
+    container_name: backend
+    ports:
+      - "8050:8080"
+    volumes:
+      - ./backend/Balance_Query-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/balance_api.war
+    depends_on:
+      - pg_balance
+
+  asterisk:
+    image: deanturpin/asterisk
+    container_name: asterisk
+    command: sh -c "apt-get update && 
+                    apt-get install -y python3 python3-pip && 
+                    pip3 install asterisk-agi requests && 
+                    /usr/sbin/asterisk -fvvv"
+    ports:
+      - "5060:5060/udp"  # SIP UDP
+      - "5060:5060/tcp"  # SIP TCP
+      - "10000-10200:10000-10200/udp"  # RTP range
+    volumes:
+      - ./asterisk/pjsip.conf:/etc/asterisk/pjsip.conf
+      - ./asterisk/extensions.conf:/etc/asterisk/extensions.conf
+      - ./asterisk/agi-bin:/var/lib/asterisk/agi-bin
+    depends_on:
+      - backend
+
+  front:
+    image: nginx:alpine
+    container_name: front
+    ports:
+      - "5050:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
